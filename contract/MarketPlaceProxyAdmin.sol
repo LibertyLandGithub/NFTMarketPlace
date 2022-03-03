@@ -1,7 +1,8 @@
 /*
     SPDX-License-Identifier: Apache-2.0
-    Website: https://www.libertyland.finance/
-    Contact: business@libertyland.finance
+    Website: https://www.libertyland.finance
+    Twitter: https://twitter.com/LibertyLand_LL
+    Email: business@libertyland.finance
     
     DeployOn: Tron-Network
 */

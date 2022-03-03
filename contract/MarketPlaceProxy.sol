@@ -1,12 +1,64 @@
 /*
     SPDX-License-Identifier: Apache-2.0
-    Website: https://www.libertyland.finance/
-    Contact: business@libertyland.finance
+    Website: https://www.libertyland.finance
+    Twitter: https://twitter.com/LibertyLand_LL
+    Email: business@libertyland.finance
     
     DeployOn: Tron-Network
 */
 
-pragma solidity ^0.8.1;
+pragma solidity ^0.8.0;
+
+abstract contract Context {
+    function _msgSender() internal view virtual returns (address) {
+        return msg.sender;
+    }
+
+    function _msgData() internal view virtual returns (bytes calldata) {
+        return msg.data;
+    }
+}
+pragma solidity ^0.8.0;
+
+abstract contract Ownable is Context {
+    address private _owner;
+    event OwnershipTransferred(
+        address indexed previousOwner,
+        address indexed newOwner
+    );
+
+    constructor() {
+        _transferOwnership(_msgSender());
+    }
+
+    function owner() public view virtual returns (address) {
+        return _owner;
+    }
+
+    modifier onlyOwner() {
+        require(owner() == _msgSender(), "Ownable: caller is not the owner");
+        _;
+    }
+
+    function renounceOwnership() public virtual onlyOwner {
+        _transferOwnership(address(0));
+    }
+
+    function transferOwnership(address newOwner) public virtual onlyOwner {
+        require(
+            newOwner != address(0),
+            "Ownable: new owner is the zero address"
+        );
+        _transferOwnership(newOwner);
+    }
+
+    function _transferOwnership(address newOwner) internal virtual {
+        address oldOwner = _owner;
+        _owner = newOwner;
+        emit OwnershipTransferred(oldOwner, newOwner);
+    }
+}
+pragma solidity ^0.8.0;
 
 library StorageSlot {
     struct AddressSlot {
@@ -191,12 +243,12 @@ library Address {
         }
     }
 }
-
+pragma solidity ^0.8.0;
 
 interface IERC1822Proxiable {
     function proxiableUUID() external view returns (bytes32);
 }
-
+pragma solidity ^0.8.0;
 
 interface IBeacon {
     function implementation() external view returns (address);
@@ -318,7 +370,7 @@ abstract contract ERC1967Upgrade {
         }
     }
 }
-
+pragma solidity ^0.8.0;
 
 abstract contract Proxy {
     function _delegate(address implementation) internal virtual {
@@ -360,7 +412,7 @@ abstract contract Proxy {
 
     function _beforeFallback() internal virtual {}
 }
-
+pragma solidity ^0.8.0;
 
 contract ERC1967Proxy is Proxy, ERC1967Upgrade {
     constructor(address _logic, bytes memory _data) payable {
@@ -381,7 +433,7 @@ contract ERC1967Proxy is Proxy, ERC1967Upgrade {
         return ERC1967Upgrade._getImplementation();
     }
 }
-
+pragma solidity ^0.8.0;
 
 contract TransparentUpgradeableProxy is ERC1967Proxy {
     constructor(
@@ -444,13 +496,60 @@ contract TransparentUpgradeableProxy is ERC1967Proxy {
         super._beforeFallback();
     }
 }
+pragma solidity ^0.8.0;
 
-pragma experimental ABIEncoderV2;
+contract ProxyAdmin is Ownable {
+    function getProxyImplementation(TransparentUpgradeableProxy proxy)
+        public
+        view
+        virtual
+        returns (address)
+    {
+        (bool success, bytes memory returndata) = address(proxy).staticcall(
+            hex"5c60da1b"
+        );
+        require(success);
+        return abi.decode(returndata, (address));
+    }
 
-contract MarketPlaceProxy is TransparentUpgradeableProxy {
-    constructor(
-        address logic,
-        address admin,
+    function getProxyAdmin(TransparentUpgradeableProxy proxy)
+        public
+        view
+        virtual
+        returns (address)
+    {
+        (bool success, bytes memory returndata) = address(proxy).staticcall(
+            hex"f851a440"
+        );
+        require(success);
+        return abi.decode(returndata, (address));
+    }
+
+    function changeProxyAdmin(
+        TransparentUpgradeableProxy proxy,
+        address newAdmin
+    ) public virtual onlyOwner {
+        proxy.changeAdmin(newAdmin);
+    }
+
+    function upgrade(TransparentUpgradeableProxy proxy, address implementation)
+        public
+        virtual
+        onlyOwner
+    {
+        proxy.upgradeTo(implementation);
+    }
+
+    function upgradeAndCall(
+        TransparentUpgradeableProxy proxy,
+        address implementation,
         bytes memory data
-    ) payable TransparentUpgradeableProxy(logic, admin, data) {}
+    ) public payable virtual onlyOwner {
+        proxy.upgradeToAndCall{value: msg.value}(implementation, data);
+    }
+}
+pragma solidity ^0.8.0;
+
+contract MarketPlaceProxyAdmin is ProxyAdmin {
+    bytes32 public constant CONTROL_TYPE = keccak256("DEXTHER_ADMIN");
 }

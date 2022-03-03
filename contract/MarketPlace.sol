@@ -1,7 +1,8 @@
 /*
     SPDX-License-Identifier: Apache-2.0
-    Website: https://www.libertyland.finance/
-    Contact: business@libertyland.finance
+    Website: https://www.libertyland.finance
+    Twitter: https://twitter.com/LibertyLand_LL
+    Email: business@libertyland.finance
     
     DeployOn: Tron-Network
 */
@@ -113,7 +114,7 @@ library AddressUpgradeable {
         }
     }
 }
-
+pragma solidity ^0.8.0;
 
 abstract contract Initializable {
     bool private _initialized;
@@ -142,7 +143,7 @@ abstract contract Initializable {
         return !AddressUpgradeable.isContract(address(this));
     }
 }
-
+pragma solidity ^0.8.0;
 
 abstract contract ContextUpgradeable is Initializable {
     function __Context_init() internal onlyInitializing {}
@@ -159,7 +160,7 @@ abstract contract ContextUpgradeable is Initializable {
 
     uint256[50] private __gap;
 }
-
+pragma solidity ^0.8.0;
 
 abstract contract OwnableUpgradeable is Initializable, ContextUpgradeable {
     address private _owner;
@@ -205,7 +206,7 @@ abstract contract OwnableUpgradeable is Initializable, ContextUpgradeable {
 
     uint256[49] private __gap;
 }
-
+pragma solidity ^0.8.0;
 
 library SafeMath {
     function tryAdd(uint256 a, uint256 b)
@@ -319,7 +320,7 @@ library SafeMath {
         }
     }
 }
-
+pragma solidity ^0.8.0;
 
 interface IERC721Receiver {
     function onERC721Received(
@@ -329,7 +330,7 @@ interface IERC721Receiver {
         bytes calldata data
     ) external returns (bytes4);
 }
-
+pragma solidity ^0.8.0;
 
 contract ERC721Holder is IERC721Receiver {
     function onERC721Received(
@@ -341,12 +342,12 @@ contract ERC721Holder is IERC721Receiver {
         return this.onERC721Received.selector;
     }
 }
-
+pragma solidity ^0.8.0;
 
 interface IERC165 {
     function supportsInterface(bytes4 interfaceId) external view returns (bool);
 }
-
+pragma solidity ^0.8.0;
 
 abstract contract ERC165 is IERC165 {
     function supportsInterface(bytes4 interfaceId)
@@ -359,7 +360,7 @@ abstract contract ERC165 is IERC165 {
         return interfaceId == type(IERC165).interfaceId;
     }
 }
-
+pragma solidity ^0.8.0;
 
 interface IERC1155Receiver is IERC165 {
     function onERC1155Received(
@@ -378,7 +379,7 @@ interface IERC1155Receiver is IERC165 {
         bytes calldata data
     ) external returns (bytes4);
 }
-
+pragma solidity ^0.8.0;
 
 abstract contract ERC1155Receiver is ERC165, IERC1155Receiver {
     function supportsInterface(bytes4 interfaceId)
@@ -393,7 +394,7 @@ abstract contract ERC1155Receiver is ERC165, IERC1155Receiver {
             super.supportsInterface(interfaceId);
     }
 }
-
+pragma solidity ^0.8.0;
 
 contract ERC1155Holder is ERC1155Receiver {
     function onERC1155Received(
@@ -416,7 +417,7 @@ contract ERC1155Holder is ERC1155Receiver {
         return this.onERC1155BatchReceived.selector;
     }
 }
-
+pragma solidity ^0.8.0;
 
 interface IERC1155 is IERC165 {
     event TransferSingle(
@@ -473,7 +474,7 @@ interface IERC1155 is IERC165 {
         bytes calldata data
     ) external;
 }
-
+pragma solidity ^0.8.0;
 
 interface IERC721 is IERC165 {
     event Transfer(
@@ -529,7 +530,7 @@ interface IERC721 is IERC165 {
         bytes calldata data
     ) external;
 }
-
+pragma solidity ^0.8.0;
 
 interface IERC20 {
     function totalSupply() external view returns (uint256);
@@ -558,7 +559,7 @@ interface IERC20 {
         uint256 value
     );
 }
-
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 library TransferHelper {
